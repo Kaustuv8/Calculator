@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:calculator/state_manager/errorstatemanager.dart';
 import 'package:calculator/state_manager/screenstatemanager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,17 +20,17 @@ class DisplayScreen extends ConsumerWidget {
     }  
     return Column(
       children: [
-        Expanded(
-          child: Container(
-            color: Colors.black,
-            width: double.maxFinite,
-            height: MediaQuery.of(context).size.height*1/12,
-            child: Text(obtainDisplay(), 
+        Container(
+          color: Colors.black,
+          width: MediaQuery.of(context).size.width * 97/100,
+          height: MediaQuery.of(context).size.height*1/12,
+          child: AutoSizeText(
+            obtainDisplay(), 
+            maxLines: 1,
             textAlign: TextAlign.right,
             style: TextStyle(
-              color: textColor,
-              fontSize: 32,
-              ),
+            color: textColor,
+            fontSize: 32,
             ),
           ),
         ),
