@@ -19,15 +19,17 @@ class DisplayScreen extends ConsumerWidget {
     }  
     return Column(
       children: [
-        Container(
-          color: Colors.black,
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height*1/12,
-          child: Text(obtainDisplay(), 
-          textAlign: TextAlign.right,
-          style: TextStyle(
-            color: textColor,
-            fontSize: 32,
+        Expanded(
+          child: Container(
+            color: Colors.black,
+            width: double.maxFinite,
+            height: MediaQuery.of(context).size.height*1/12,
+            child: Text(obtainDisplay(), 
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 32,
+              ),
             ),
           ),
         ),

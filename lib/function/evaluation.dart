@@ -17,7 +17,7 @@ double precedence(String s){
 }
 
 bool isSpecialCharacter(String s){
-  if("()".contains(s)){
+  if("()sincostanlogln".contains(s)){
     return true;
   }
   return false;
@@ -30,39 +30,12 @@ bool isOperator(String s){
   return false;
 }
 
-List<String> removeNonPolynomialFunction(List<String> expression){
-  for(int i = 0; i<expression.length; i++){
-    if(expression[i] == "sin"){
-      double Value = sin(double.parse(expression[i+1]));
-      expression.replaceRange(i, i+2, [Value.toString()]);
-    }
-    if(expression[i] == "cos"){
-      double Value = cos(double.parse(expression[i+1]));
-      expression.replaceRange(i, i+2, [Value.toString()]);
-    }
 
-    if(expression[i] == "tan"){
-      double Value = tan(double.parse(expression[i+1]));
-      expression.replaceRange(i, i+2, [Value.toString()]);
-    }
-
-    if(expression[i] == "log"){
-      double Value = log(double.parse(expression[i+1])) / log(10);
-      expression.replaceRange(i, i+2, [Value.toString()]);
-    }
-
-    if(expression[i] == "ln"){
-      double Value = log(double.parse(expression[i+1]));
-      expression.replaceRange(i, i+2, [Value.toString()]);
-    }
-
-  }
-  return expression;
-}
 
 List<String> givePostFix(List<String> expression){
   List<String> postFixExp = [];
   List<String> stack = [];
+  //Manages placement of decimal point
   if(
     expression.isNotEmpty 
     && expression[0] == "." 
@@ -70,31 +43,10 @@ List<String> givePostFix(List<String> expression){
       expression.remove(expression[0]);
       expression[0] = ".${expression[0]}";
   }
-  
-  for(int i =0; i<expression.length; i++){
-    if("loglnsincostan".contains(expression[i])){
-      if(expression[i+1] == "("){
-        int brCheck = 1;
-        int count = i+2;
-        while(count<expression.length || (brCheck == 0 && expression[count] != ")")){
-          if(expression[count] == "("){
-            brCheck++;
-          }
-          if(expression[count] == ")" && brCheck != 1){
-            brCheck--;
-          }
-          count++;
-        }
-        List<String> RecList = expression.sublist(i+1, count);
-        expression.replaceRange(i+1, count, [evaluate(RecList)]);
-      }
-    }
-  }
-
-  expression = removeNonPolynomialFunction(expression);
+  //
 
   for(int i = 0; i<expression.length; i++){
-
+    //manages negative sign by turning numbers into negative wherever appropriate
     if(i==0 && expression[i] == "-" && "123456789.".contains(expression[i+1])){
       expression.remove("-");
       expression[0] = "-${expression[0]}";
@@ -106,14 +58,9 @@ List<String> givePostFix(List<String> expression){
         expression.insert(i, "+");
       }
     }
+    //Manges placement of multiplication symbol 
     if( 
-      i!=0 && i<expression.length-1 
-      && (
-      (expression[i-1] == ')' 
-        && 
-      !isOperator(expression[i])
-      )
-        ||
+      i!=0 && i<expression.length-1 && ((expression[i-1] == ')' && !isOperator(expression[i]) && expression[i] != ")")||
       (
         !isOperator(expression[i-1])
         && !"sincostanlogln".contains(expression[i-1]) 
@@ -145,8 +92,9 @@ List<String> givePostFix(List<String> expression){
         stack.add(i);
       }
     }
+
     else if(isSpecialCharacter(i)){
-      if(i == '('){
+      if("(sincostanlogln".contains(i)){
         stack.add(i);
       }
       if(i == ')'){
@@ -157,6 +105,9 @@ List<String> givePostFix(List<String> expression){
           }//if
         }//while
         stack.removeLast();
+        if("sincostanlogln".contains(stack[stack.length - 1])){
+          postFixExp.add(stack.removeLast());
+        }
       }           
     }//else if 
     else{
@@ -166,11 +117,13 @@ List<String> givePostFix(List<String> expression){
   while(stack.isNotEmpty){
     postFixExp.add(stack.removeLast());
   }
+  print(postFixExp);
   return postFixExp;
 }
 
 String evaluate(List<String> expression){
-  if(expression.isNotEmpty && "÷+-×".contains(expression[expression.length-1])){
+  print("Expression before evaluation : ${expression}");
+  if(expression.isNotEmpty && "÷+-×sincostanlogln".contains(expression[expression.length-1])){
     return "Error";
   }
   List<String> PostFixExp = givePostFix(expression);
@@ -191,7 +144,7 @@ String evaluate(List<String> expression){
       }
     }
     else{
-      if(stack.length <= 1){
+      if(stack.isEmpty){
         return "Error";
       }
       if(i == "+"){
@@ -212,13 +165,39 @@ String evaluate(List<String> expression){
         }
         stack.add(secondprev / prev);
       }
+      if(i == "sin"){
+        double prev = stack.removeLast();
+        stack.add(sin(prev));
+      }
+      if(i == "cos"){
+        double prev = stack.removeLast();
+        stack.add(cos(prev));
+      }
+      if(i == "tan"){
+        double prev = stack.removeLast();
+        stack.add(tan(prev));
+      }
+      if(i == "log"){
+        double prev = stack.removeLast();
+        if(prev == 0){
+          return "Error";
+        }
+        stack.add(log(prev) / log(10));
+      }
+      if(i == "ln"){
+        double prev = stack.removeLast();
+        if(prev == 0){
+          return "Error";
+        }
+        stack.add(log(prev));
+      }
     }
   }
   if (stack.length != 1){
     return "Error";
   }
   final String answer = stack.removeLast().toString().trim();
-  if(double.parse(answer) == -0){
+  if(double.parse(answer) == 0){
       return "0";
     }
   if(double.parse(answer).floor() == double.parse(answer)){
