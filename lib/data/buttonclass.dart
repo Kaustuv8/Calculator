@@ -5,7 +5,8 @@ enum ButtonClass {
   deletion,
   alldeletion,
   evaluation,
-  valuemod
+  valuemod,
+  layoutmod
 }
 class Button{
   Button({required this.letter, required this.type});

@@ -121,7 +121,7 @@ List<String> givePostFix(List<String> expression){
   return postFixExp;
 }
 
-String evaluate(List<String> expression){
+String evaluate(List<String> expression, String inputType){
   print("Expression before evaluation : ${expression}");
   if(expression.isNotEmpty && "÷+-×sincostanlogln".contains(expression[expression.length-1])){
     return "Error";
@@ -167,15 +167,30 @@ String evaluate(List<String> expression){
       }
       if(i == "sin"){
         double prev = stack.removeLast();
-        stack.add(sin(prev));
+        if(inputType == "rad"){
+          stack.add(sin(prev));
+        }
+        else{
+          stack.add(sin(prev * 180 / pi));
+        }
       }
       if(i == "cos"){
         double prev = stack.removeLast();
-        stack.add(cos(prev));
+        if(inputType == "rad"){
+          stack.add(cos(prev));
+        }
+        else{
+          stack.add(cos(prev * 180 / pi));
+        }
       }
       if(i == "tan"){
         double prev = stack.removeLast();
-        stack.add(tan(prev));
+        if(inputType == "rad"){
+          stack.add(tan(prev));
+        }
+        else{
+          stack.add(tan(prev * 180 / pi));
+        }
       }
       if(i == "log"){
         double prev = stack.removeLast();

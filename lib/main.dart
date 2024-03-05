@@ -36,6 +36,28 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
     return buttonList2;
   }
 
+  Color giveLetterColour(Button B){
+    if(B.type == ButtonClass.valuemod){
+      if(inputType == "rad"){
+        if(B.letter == "rad"){
+          return Colors.red;
+        }
+        else{
+          return Colors.white;
+        }
+      }
+    else{
+      if(B.letter == "rad"){
+        return Colors.white;
+      }
+      else{
+        return Colors.red;
+      }
+    }
+  }
+  return Colors.white;
+}
+
   int giveCrossAxisCount (int choice){
     if(choice == 1){
       return 4;
@@ -87,7 +109,7 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
                       ref.read(errorTextProvider.notifier).removeError();
                       ref.read(textColorProvider.notifier).turnWhite();
                       if(i.type == ButtonClass.evaluation){
-                        conclude(ref.read(screenStateProvider), evaluate(ref.read(screenStateProvider)));
+                        conclude(ref.read(screenStateProvider), evaluate(ref.read(screenStateProvider), inputType));
                         print(save); 
                         if(!ref.read(screenStateProvider.notifier).errorNotPresent()){
                           ref.read(errorTextProvider.notifier).giveError();
@@ -101,9 +123,9 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
                       backgroundColor: const Color.fromARGB(255, 54, 54, 54),
                       child: Text(
                         i.letter,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 24,
-                          color: Color.fromARGB(255, 255, 255, 255)
+                          color: giveLetterColour(i),
                         ),
                       ),
                     ),

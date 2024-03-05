@@ -122,7 +122,7 @@ final List<Button> buttonList2 = [
   ),
   Button(
     letter:"inv",
-    type: ButtonClass.valuemod,
+    type: ButtonClass.layoutmod,
   ),
   Button(
     letter: "!",

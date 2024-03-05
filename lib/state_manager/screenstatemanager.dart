@@ -2,6 +2,12 @@ import 'package:calculator/function/evaluation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:calculator/data/buttonclass.dart';
 
+
+String inputType = "rad";
+
+
+
+
 void load(List<String> state){
     save = state;
   }
@@ -19,15 +25,29 @@ class ScreenState extends StateNotifier<List<String>>{
   ScreenState() : super([]);
 
   
+  void changeType(String B){
+  if (B == "deg"){
+    inputType = "deg";
+  }
+  else{
+    inputType = "rad";
+  }
+}
 
   bool errorNotPresent(){
-    if(evaluate(state) == "Error"){
+    if(evaluate(state, inputType) == "Error"){
       return false;
     }
     return true;
   }
 
   void buttonReact(Button B){
+
+
+    if(B.type == ButtonClass.valuemod){
+      changeType(B.letter);
+      print(inputType);
+    }
 
     if (B.type == ButtonClass.valuenentry){
       
@@ -85,7 +105,7 @@ class ScreenState extends StateNotifier<List<String>>{
     }
     else if(B.type == ButtonClass.evaluation){
       
-      String evaluation = evaluate(state);
+      String evaluation = evaluate(state, inputType);
       if(evaluation != "Error"){
         state = [evaluation];
       }
