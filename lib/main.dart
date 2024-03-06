@@ -100,6 +100,7 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
                 icon: const Icon(
                   Icons.square_rounded)
               ),
+              title: Text(ref.watch(radDegSelectorProvider)),
               trailing: IconButton(
                 icon: const Icon(
                   Icons.scale,
@@ -123,13 +124,20 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
                   InkWell(
                     onTap: () {
                       if(i.type == ButtonClass.valuemod){
-                        ref.read(radDegSelectorProvider.notifier).switchState();
+                        if(ref.read(radDegSelectorProvider) != i.letter){
+                          ref.read(radDegSelectorProvider.notifier).switchState();
+                        }
                       }
                       ref.read(errorTextProvider.notifier).removeError();
                       ref.read(textColorProvider.notifier).turnWhite();
                       if(i.type == ButtonClass.evaluation){
-                        print(ref.read(radDegSelectorProvider));
-                        conclude(ref.read(screenStateProvider), evaluate(ref.read(screenStateProvider), ref.read(radDegSelectorProvider)));
+                        conclude(
+                          ref.read(screenStateProvider), 
+                          evaluate(
+                            ref.read(screenStateProvider), 
+                            ref.read(radDegSelectorProvider),
+                          ),
+                        );
                         print(save); 
                         if(!ref.read(screenStateProvider.notifier).errorNotPresent(inputType)){
                           ref.read(errorTextProvider.notifier).giveError();
