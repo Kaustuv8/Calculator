@@ -212,7 +212,7 @@ String evaluate(List<String> expression, String inputType){
       if(i == "tan"){
         double prev = stack.removeLast();
         if(inputType == "rad"){
-          stack.add((prev));
+          stack.add(tan(prev));
         }
         else{
           if(prev == 90 || prev == 270){

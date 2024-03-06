@@ -99,8 +99,7 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
                 },
                 icon: const Icon(
                   Icons.square_rounded)
-              ),
-              title: Text(ref.watch(radDegSelectorProvider)),
+                ),
               trailing: IconButton(
                 icon: const Icon(
                   Icons.scale,
@@ -110,6 +109,10 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
           ),
           body: Column(
             children: [
+              SizedBox(
+                height: 0,
+                width: 0,
+                child: Text(ref.watch(radDegSelectorProvider))),
                DisplayScreen(),
                const SizedBox(height: 20,),
                GridView(
