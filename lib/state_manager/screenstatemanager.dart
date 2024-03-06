@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:calculator/data/buttonclass.dart';
 
 
-String inputType = "rad";
+
 
 
 
@@ -25,29 +25,19 @@ class ScreenState extends StateNotifier<List<String>>{
   ScreenState() : super([]);
 
   
-  void changeType(String B){
-  if (B == "deg"){
-    inputType = "deg";
-  }
-  else{
-    inputType = "rad";
-  }
-}
+  
 
-  bool errorNotPresent(){
+  bool errorNotPresent(String inputType){
     if(evaluate(state, inputType) == "Error"){
       return false;
     }
     return true;
   }
 
-  void buttonReact(Button B){
+  void buttonReact(Button B, String inputType){
 
 
-    if(B.type == ButtonClass.valuemod){
-      changeType(B.letter);
-      print(inputType);
-    }
+    
 
     if (B.type == ButtonClass.valuenentry){
       
@@ -104,7 +94,6 @@ class ScreenState extends StateNotifier<List<String>>{
       }
     }
     else if(B.type == ButtonClass.evaluation){
-      
       String evaluation = evaluate(state, inputType);
       if(evaluation != "Error"){
         state = [evaluation];

@@ -98,6 +98,9 @@ List<String> givePostFix(List<String> expression){
         stack.add(i);
       }
       if(i == ')'){
+        if(stack.isEmpty){
+          return [];
+        }
         while(stack[stack.length - 1] != '('){
           postFixExp.add(stack.removeLast());
           if(stack.isEmpty){
@@ -165,13 +168,24 @@ String evaluate(List<String> expression, String inputType){
         }
         stack.add(secondprev / prev);
       }
+      print("The input type is : ${inputType} ");
       if(i == "sin"){
         double prev = stack.removeLast();
         if(inputType == "rad"){
           stack.add(sin(prev));
         }
         else{
-          stack.add(sin(prev * 180 / pi));
+          if(prev == 90 || prev == 270){
+            stack.add(1);
+          }
+          else if(prev == 180 || prev == 0){
+            stack.add(0);
+          }
+          else{
+            prev*=pi/180;
+            stack.add(sin(prev));
+          }
+          
         }
       }
       if(i == "cos"){
@@ -180,16 +194,40 @@ String evaluate(List<String> expression, String inputType){
           stack.add(cos(prev));
         }
         else{
-          stack.add(cos(prev * 180 / pi));
-        }
+          if(prev == 90 || prev == 270){
+            stack.add(0);
+          }
+          else if(prev == 0){
+            stack.add(1);
+          }
+          else if(prev == 180){
+            stack.add(-1);
+          }
+          else{
+            prev*=pi/180;
+            stack.add(cos(prev));
+          }
+        } 
       }
       if(i == "tan"){
         double prev = stack.removeLast();
         if(inputType == "rad"){
-          stack.add(tan(prev));
+          stack.add((prev));
         }
         else{
-          stack.add(tan(prev * 180 / pi));
+          if(prev == 90 || prev == 270){
+            return "Error";
+          }
+          else if(prev == 0){
+            stack.add(0);
+          }
+          else if(prev == 180){
+            stack.add(0);
+          }
+          else{
+            prev*=pi/180;
+            stack.add(tan(prev));
+          }
         }
       }
       if(i == "log"){

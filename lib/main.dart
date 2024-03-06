@@ -2,6 +2,7 @@ import 'package:calculator/data/buttonList.dart';
 import 'package:calculator/data/buttonclass.dart';
 import 'package:calculator/function/evaluation.dart';
 import 'package:calculator/state_manager/errorstatemanager.dart';
+import 'package:calculator/state_manager/radDegreeSelector.dart';
 import 'package:calculator/state_manager/screenstatemanager.dart';
 import 'package:flutter/material.dart';
 import 'package:calculator/widgets/displayscreen.dart';
@@ -21,6 +22,8 @@ class CalculatorMenu extends ConsumerStatefulWidget {
 class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
   Color textColor = Colors.white;
   int layoutSelector = 1;
+  String inputType = "rad";
+
   final theme = ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
@@ -28,6 +31,15 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
       seedColor: const Color.fromARGB(255, 59, 57, 57),
     ),
   );
+
+  void changeType(String B){
+  if (B == "deg"){
+    inputType = "deg";
+  }
+  else{
+    inputType = "rad";
+  }
+}
 
   List<Button>giveList(int choice){
     if(choice == 1){
@@ -66,7 +78,11 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
   }
 
 
+  
+
   @override
+
+
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -102,21 +118,25 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
                 ),
-              children: [
+                         children: [
                 for (final i in giveList(layoutSelector))
                   InkWell(
                     onTap: () {
+                      if(i.type == ButtonClass.valuemod){
+                        ref.read(radDegSelectorProvider.notifier).switchState();
+                      }
                       ref.read(errorTextProvider.notifier).removeError();
                       ref.read(textColorProvider.notifier).turnWhite();
                       if(i.type == ButtonClass.evaluation){
-                        conclude(ref.read(screenStateProvider), evaluate(ref.read(screenStateProvider), inputType));
+                        print(ref.read(radDegSelectorProvider));
+                        conclude(ref.read(screenStateProvider), evaluate(ref.read(screenStateProvider), ref.read(radDegSelectorProvider)));
                         print(save); 
-                        if(!ref.read(screenStateProvider.notifier).errorNotPresent()){
+                        if(!ref.read(screenStateProvider.notifier).errorNotPresent(inputType)){
                           ref.read(errorTextProvider.notifier).giveError();
                           ref.read(textColorProvider.notifier).turnRed();
                         }
                       }
-                      ref.read(screenStateProvider.notifier).buttonReact(i);
+                      ref.read(screenStateProvider.notifier).buttonReact(i, ref.read(radDegSelectorProvider));
                     },
                     child: CircleAvatar(
                       radius: 5,
@@ -125,13 +145,13 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
                         i.letter,
                         style: TextStyle(
                           fontSize: 24,
-                          color: giveLetterColour(i),
+                          color: ref.read(radDegSelectorProvider.notifier).giveColor(i),
                         ),
                       ),
                     ),
                   ),
                 ],
-              ),
+               ),
             ]
           ),
         ),
