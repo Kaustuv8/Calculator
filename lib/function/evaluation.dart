@@ -1,5 +1,7 @@
 import 'dart:math';
 
+
+
 double factorial(double i){
   if(i<0 || i.floor() != i){
     return -1;
@@ -93,9 +95,12 @@ List<String> givePostFix(List<String> expression){
       expression[i] = ".${expression[i]}";
     }
   }
+  //Actual Postfix generation begins from here
   for(final i  in expression){
     if(isOperator(i)){
-      if(stack.isEmpty || precedence(stack[stack.length-1]) < precedence(i)){
+      if(stack.isEmpty || 
+        precedence(stack[stack.length-1]) < precedence(i) || 
+        (i == "^" && stack[stack.length-1] == "^" )){
       stack.add(i);
       }
       else{
@@ -162,6 +167,15 @@ String evaluate(List<String> expression, String inputType){
     else{
       if(stack.isEmpty){
         return "Error";
+      }
+      if(i == "^"){
+        if(stack.length < 2){
+          return "Error";
+        }
+        num prev = stack.removeLast();
+        num prev2 = stack.removeLast();
+        stack.add(double.parse(pow(prev2, prev).toString()));
+        
       }
       if(i == "√"){
         double prev = stack.removeLast();
