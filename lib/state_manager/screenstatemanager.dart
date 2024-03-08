@@ -48,14 +48,14 @@ class ScreenState extends StateNotifier<List<String>>{
             String fin = state.removeLast();
             if(
               fin.contains("%")
-              || "sincostanlogln".contains(B.letter) 
+              || "sincostanlogln√".contains(B.letter) 
             ){
                 state = [...state, fin, "×", B.letter];
             }
             else{
               state = [...state, fin + B.letter];
             }
-            if("sincostanlogln".contains(B.letter)){
+            if("sincostanlogln√".contains(B.letter)){
               state = [...state, "("];
             }
         }
@@ -70,7 +70,7 @@ class ScreenState extends StateNotifier<List<String>>{
       }
       else{
         state = [...state, B.letter];
-        if("sincostanlogln".contains(B.letter)){
+        if("sincostanlogln√".contains(B.letter)){
               state = [...state, "("];
             }
       }

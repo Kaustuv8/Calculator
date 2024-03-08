@@ -1,5 +1,18 @@
 import 'dart:math';
 
+double factorial(double i){
+  if(i<0 || i.floor() != i){
+    return -1;
+  }
+  else{
+    int num = i.floor();
+    if(num==0){
+      return 1;
+    }
+    return num * factorial(num-1); 
+  }
+  
+}
 
 double precedence(String s){
   switch(s){
@@ -17,7 +30,7 @@ double precedence(String s){
 }
 
 bool isSpecialCharacter(String s){
-  if("()sincostanlogln".contains(s)){
+  if("()sincostanlogln√".contains(s)){
     return true;
   }
   return false;
@@ -54,7 +67,7 @@ List<String> givePostFix(List<String> expression){
     if(expression[i] == "-"){
       expression.remove("-");
       expression[i] = "-${expression[i]}";
-      if(!"×÷".contains(expression[i-1])){
+      if(!"×÷(".contains(expression[i-1])){
         expression.insert(i, "+");
       }
     }
@@ -63,7 +76,7 @@ List<String> givePostFix(List<String> expression){
       i!=0 && i<expression.length-1 && ((expression[i-1] == ')' && !isOperator(expression[i]) && expression[i] != ")")||
       (
         !isOperator(expression[i-1])
-        && !"sincostanlogln".contains(expression[i-1]) 
+        && !"sincostanlogln√".contains(expression[i-1]) 
         && expression[i] == '('
         && expression[i-1] != '('
       )
@@ -94,7 +107,7 @@ List<String> givePostFix(List<String> expression){
     }
 
     else if(isSpecialCharacter(i)){
-      if("(sincostanlogln".contains(i)){
+      if("(sincostanlogln√".contains(i)){
         stack.add(i);
       }
       if(i == ')'){
@@ -108,7 +121,7 @@ List<String> givePostFix(List<String> expression){
           }//if
         }//while
         stack.removeLast();
-        if("sincostanlogln".contains(stack[stack.length - 1])){
+        if(stack.isNotEmpty && "sincostanlogln√".contains(stack[stack.length - 1])){
           postFixExp.add(stack.removeLast());
         }
       }           
@@ -126,7 +139,7 @@ List<String> givePostFix(List<String> expression){
 
 String evaluate(List<String> expression, String inputType){
   print("Expression before evaluation : ${expression}");
-  if(expression.isNotEmpty && "÷+-×sincostanlogln".contains(expression[expression.length-1])){
+  if(expression.isNotEmpty && "÷+-×sincostanlogln√".contains(expression[expression.length-1])){
     return "Error";
   }
   List<String> PostFixExp = givePostFix(expression);
@@ -150,6 +163,20 @@ String evaluate(List<String> expression, String inputType){
       if(stack.isEmpty){
         return "Error";
       }
+      if(i == "√"){
+        double prev = stack.removeLast();
+        if(prev < 0){
+          return "Error";
+        }
+        stack.add(sqrt(prev));
+      }
+      if(i == "!"){
+        double prev = factorial(stack.removeLast());
+        if(prev == -1){
+          return "Error";
+        }
+        stack.add(prev);
+      }
       if(i == "+"){
         stack.add(stack.removeLast() + stack.removeLast());
       }
@@ -168,7 +195,6 @@ String evaluate(List<String> expression, String inputType){
         }
         stack.add(secondprev / prev);
       }
-      print("The input type is : ${inputType} ");
       if(i == "sin"){
         double prev = stack.removeLast();
         if(inputType == "rad"){
