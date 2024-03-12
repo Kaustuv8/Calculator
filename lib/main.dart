@@ -23,6 +23,7 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
   Color textColor = Colors.white;
   int layoutSelector = 1;
   String inputType = "rad";
+  bool inverseButtons = false;
 
   final theme = ThemeData(
     useMaterial3: true,
@@ -41,9 +42,12 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
   }
 }
 
-  List<Button>giveList(int choice){
+  List<Button>giveList(int choice, bool inverseButtons){
     if(choice == 1){
       return buttonList;
+    }
+    if(inverseButtons){
+      return inverseButtonList;
     }
     return buttonList2;
   }
@@ -123,9 +127,14 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
                   mainAxisSpacing: 5,
                 ),
                          children: [
-                for (final i in giveList(layoutSelector))
+                for (final i in giveList(layoutSelector, inverseButtons))
                   InkWell(
                     onTap: () {
+                      if(i.type == ButtonClass.layoutmod){
+                        setState(() {
+                          inverseButtons = !inverseButtons;
+                        }); 
+                      }
                       if(i.type == ButtonClass.valuemod){
                         if(ref.read(radDegSelectorProvider) != i.letter){
                           ref.read(radDegSelectorProvider.notifier).switchState();

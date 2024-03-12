@@ -8,7 +8,7 @@ double factorial(double i){
   }
   else{
     int num = i.floor();
-    if(num==0){
+    if(num==0 || num == 1){
       return 1;
     }
     return num * factorial(num-1); 
@@ -59,7 +59,6 @@ List<String> givePostFix(List<String> expression){
       expression[0] = ".${expression[0]}";
   }
   //
-
   for(int i = 0; i<expression.length; i++){
     //manages negative sign by turning numbers into negative wherever appropriate
     if(i==0 && expression[i] == "-" && "123456789.".contains(expression[i+1])){
@@ -110,9 +109,8 @@ List<String> givePostFix(List<String> expression){
         stack.add(i);
       }
     }
-
     else if(isSpecialCharacter(i)){
-      if("(sincostanlogln√".contains(i)){
+      if("(sincostanlogln√%".contains(i)){
         stack.add(i);
       }
       if(i == ')'){
@@ -143,30 +141,91 @@ List<String> givePostFix(List<String> expression){
 }
 
 String evaluate(List<String> expression, String inputType){
-  print("Expression before evaluation : ${expression}");
+  print("Expression before evaluation : $expression");
   if(expression.isNotEmpty && "÷+-×sincostanlogln√".contains(expression[expression.length-1])){
     return "Error";
   }
   List<String> PostFixExp = givePostFix(expression);
+
   if(PostFixExp.isEmpty){
     return "Error";
   }
   List<double> stack = [];
   for(final i in PostFixExp){
-    if(i.contains(RegExp(r'[0-9]')) || i[i.length-1] == "%"){
-      if(i[i.length-1] == "%"){
+    print("Current stack : $stack");
+    if(i.contains(RegExp(r'[0-9]')) || i.contains("π") || i.contains("e") || i[i.length-1] == "%"){
+      if(i.contains("π") || i.contains("e") || i.contains("%")){
+          if(i.length!=1){
+            List<String> iList = [];
+            int prev = 0;
+            int percentageCount = 0;
+            for(int j = 0; j<i.length; j++){
+              if(i[j] == "π"){
+                iList = [...iList, i.substring(prev, j).trim(), "π"];
+                prev = j+1;
+              }
+              if(i[j] == "e"){
+                iList = [...iList, i.substring(prev, j).trim(), "e"];
+                prev = j+1;
+              }
+              if(i[j] == "%"){
+                iList = [...iList, i.substring(prev, j).trim()];
+                prev = j+1;
+                percentageCount++;
+              }
+            }
+            iList.removeWhere((item) => item == " " || item == "");
+            print("iList is : $iList");
+            double mul = 1;
+            for(final j in iList){
+              if(j == "π"){
+                mul*=pi;
+              }
+              else if(j == "e"){
+                mul*=e;
+              }
+              else{
+                mul*=double.parse(j);
+              }
+            }
+            if(percentageCount>0){
+              while(percentageCount!=0){
+                mul/=100;
+                percentageCount--;
+              }
+              stack.add(mul);
+            }
+            else{
+              stack.add(mul);
+            }
+           
+        }
+        else{
+          if(i.contains("π")){
+            stack.add(pi);
+          }
+          if(i.contains("e")){
+            stack.add(e);
+          }
+        }
+      }
+    else if(i[i.length-1] == "%"){
         if(i.length == 1){
           return "Error";
         }
         stack.add(double.parse(i.substring(0,i.length-1)) / 100);
       }
-      else {
+    else{
       stack.add(double.parse(i));
-      }
     }
+  }
     else{
       if(stack.isEmpty){
         return "Error";
+      }
+      if(i == "%"){
+        double prev = stack.removeLast();
+        stack.add(prev/100);
       }
       if(i == "^"){
         if(stack.length < 2){
@@ -215,17 +274,21 @@ String evaluate(List<String> expression, String inputType){
           stack.add(sin(prev));
         }
         else{
-          if(prev == 90 || prev == 270){
-            stack.add(1);
+          if((prev%90 == 0  || prev%270 == 0) && prev%180 != 0){
+            if((prev%270 == 0 && prev >= 0) || (prev%90 == 0 && prev<0)){
+              stack.add(-1);
+            }
+            else{
+              stack.add(1);
+            }
           }
-          else if(prev == 180 || prev == 0){
+          else if(prev % 180 == 0 || prev == 0){
             stack.add(0);
           }
           else{
             prev*=pi/180;
             stack.add(sin(prev));
           }
-          
         }
       }
       if(i == "cos"){
@@ -233,19 +296,21 @@ String evaluate(List<String> expression, String inputType){
         if(inputType == "rad"){
           stack.add(cos(prev));
         }
-        else{
-          if(prev == 90 || prev == 270){
+         else{
+          if((prev%90 == 0  || prev%270 == 0) && prev%180 != 0){
             stack.add(0);
           }
-          else if(prev == 0){
-            stack.add(1);
-          }
-          else if(prev == 180){
-            stack.add(-1);
+          else if(prev % 180 == 0){
+            if((prev/180)%2 != 0){
+              stack.add(-1);
+            }
+            else{
+              stack.add(1);
+            }
           }
           else{
             prev*=pi/180;
-            stack.add(cos(prev));
+            stack.add(sin(prev));
           }
         } 
       }
@@ -255,13 +320,10 @@ String evaluate(List<String> expression, String inputType){
           stack.add(tan(prev));
         }
         else{
-          if(prev == 90 || prev == 270){
+          if((prev%90 == 0 || prev%270 == 0) && prev%180!=0){
             return "Error";
           }
-          else if(prev == 0){
-            stack.add(0);
-          }
-          else if(prev == 180){
+          else if(prev%180 == 0){
             stack.add(0);
           }
           else{

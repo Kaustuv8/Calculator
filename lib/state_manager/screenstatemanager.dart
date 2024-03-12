@@ -40,16 +40,15 @@ class ScreenState extends StateNotifier<List<String>>{
     
 
     if (B.type == ButtonClass.valuenentry){
-      
       if(
         state.isNotEmpty 
-        && state[state.length - 1].contains(RegExp(r'[0-9]')) 
-        && ("12345678900.%sincostanlogln".contains(B.letter))){
+        && (state[state.length - 1].contains(RegExp(r'[0-9]')) || state[state.length-1].contains("π") || state[state.length-1].contains("e")) 
+        && ("12345678900.%sincostanlogln√πe".contains(B.letter))){
             String fin = state.removeLast();
             if(
-              fin.contains("%")
-              || "sincostanlogln√".contains(B.letter) 
-            ){
+              (fin.contains("%") && !B.letter.contains("%")) || "sincostanlogln√".contains(B.letter) 
+            )
+            {
                 state = [...state, fin, "×", B.letter];
             }
             else{
@@ -74,14 +73,12 @@ class ScreenState extends StateNotifier<List<String>>{
               state = [...state, "("];
             }
       }
-    
     }
     else if(B.type == ButtonClass.alldeletion){
       state = [];
       dump(state);
     }
     else if(B.type == ButtonClass.deletion){
-      
       if (state.isNotEmpty){      
         String prev = state.removeLast();
         if("0123456789.".contains(prev[0]) && prev.length > 1){
@@ -90,7 +87,6 @@ class ScreenState extends StateNotifier<List<String>>{
         else{
         state = [...state];
         }
-        
       }
     }
     else if(B.type == ButtonClass.evaluation){
