@@ -43,10 +43,10 @@ class ScreenState extends StateNotifier<List<String>>{
       if(
         state.isNotEmpty 
         && (state[state.length - 1].contains(RegExp(r'[0-9]')) || state[state.length-1].contains("π") || state[state.length-1].contains("e")) 
-        && ("12345678900.%sincostanlogln√πe".contains(B.letter))){
+        && ("12345678900.%arcsincarcosarctanlogln√πe".contains(B.letter))){
             String fin = state.removeLast();
             if(
-              (fin.contains("%") && !B.letter.contains("%")) || "sincostanlogln√".contains(B.letter) 
+              (fin.contains("%") && !B.letter.contains("%")) || "arcsinarccosarctanlogln√".contains(B.letter) 
             )
             {
                 state = [...state, fin, "×", B.letter];
@@ -54,7 +54,7 @@ class ScreenState extends StateNotifier<List<String>>{
             else{
               state = [...state, fin + B.letter];
             }
-            if("sincostanlogln√".contains(B.letter)){
+            if("arcsinarccosarctanlogln√".contains(B.letter)){
               state = [...state, "("];
             }
         }
@@ -69,7 +69,7 @@ class ScreenState extends StateNotifier<List<String>>{
       }
       else{
         state = [...state, B.letter];
-        if("sincostanlogln√".contains(B.letter)){
+        if("arcsinarccosarctanlogln√".contains(B.letter)){
               state = [...state, "("];
             }
       }

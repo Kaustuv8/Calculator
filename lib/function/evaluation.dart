@@ -32,7 +32,7 @@ double precedence(String s){
 }
 
 bool isSpecialCharacter(String s){
-  if("()sincostanlogln√".contains(s)){
+  if("()arcsinarccosarctanlogln√".contains(s)){
     return true;
   }
   return false;
@@ -77,7 +77,7 @@ List<String> givePostFix(List<String> expression){
       i!=0 && i<expression.length-1 && ((expression[i-1] == ')' && !isOperator(expression[i]) && expression[i] != ")")||
       (
         !isOperator(expression[i-1])
-        && !"sincostanlogln√".contains(expression[i-1]) 
+        && !"arcsinarccosarctanlogln√".contains(expression[i-1]) 
         && expression[i] == '('
         && expression[i-1] != '('
       )
@@ -110,7 +110,7 @@ List<String> givePostFix(List<String> expression){
       }
     }
     else if(isSpecialCharacter(i)){
-      if("(sincostanlogln√%".contains(i)){
+      if("(arcsinarccosarctanlogln√%".contains(i)){
         stack.add(i);
       }
       if(i == ')'){
@@ -124,7 +124,7 @@ List<String> givePostFix(List<String> expression){
           }//if
         }//while
         stack.removeLast();
-        if(stack.isNotEmpty && "sincostanlogln√".contains(stack[stack.length - 1])){
+        if(stack.isNotEmpty && "arcsinarccosarctanlogln√".contains(stack[stack.length - 1])){
           postFixExp.add(stack.removeLast());
         }
       }           
@@ -142,7 +142,7 @@ List<String> givePostFix(List<String> expression){
 
 String evaluate(List<String> expression, String inputType){
   print("Expression before evaluation : $expression");
-  if(expression.isNotEmpty && "÷+-×sincostanlogln√".contains(expression[expression.length-1])){
+  if(expression.isNotEmpty && "÷+-×arcsinarccosarctanlogln√".contains(expression[expression.length-1])){
     return "Error";
   }
   List<String> PostFixExp = givePostFix(expression);
@@ -328,23 +328,67 @@ String evaluate(List<String> expression, String inputType){
           }
           else{
             prev*=pi/180;
-            stack.add(tan(prev));
+            if(sin(prev) == cos(prev)){
+              stack.add(1);
+            }
+            else{
+              stack.add(sin(prev)/cos(prev));
+            }
+            
           }
         }
       }
       if(i == "log"){
         double prev = stack.removeLast();
-        if(prev == 0){
+        if(prev <= 0){
           return "Error";
         }
         stack.add(log(prev) / log(10));
       }
       if(i == "ln"){
         double prev = stack.removeLast();
-        if(prev == 0){
+        if(prev <= 0){
           return "Error";
         }
         stack.add(log(prev));
+      }
+      if(i == "arcsin" || i == "arccos"){
+        double prev = stack.removeLast();
+        if(prev>1 || prev < -1){
+          return "Error";
+        }
+        else if(i == "arcsin"){
+          if(inputType == "rad"){
+            stack.add(asin(prev));
+          }
+          else{
+            prev = asin(prev);
+            prev*=180/pi;
+            stack.add(prev);
+          }
+          
+        }
+        else{
+          if(inputType == "rad"){
+            stack.add(acos(prev));
+          }
+          else{
+            prev = acos(prev);
+            prev*=180/pi;
+            stack.add(prev);
+          }
+        }
+      }
+      if(i == "arctan"){
+        double prev = stack.removeLast();
+        if(inputType == "rad"){
+            stack.add(atan(prev));
+          }
+          else{
+            prev = atan(prev);
+            prev*=180/pi;
+            stack.add(prev);
+          }
       }
     }
   }

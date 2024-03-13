@@ -126,7 +126,7 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
                 ),
-                         children: [
+                children: [
                 for (final i in giveList(layoutSelector, inverseButtons))
                   InkWell(
                     onTap: () {
