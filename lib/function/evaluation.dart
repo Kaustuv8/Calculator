@@ -296,7 +296,7 @@ String evaluate(List<String> expression, String inputType){
         if(inputType == "rad"){
           stack.add(cos(prev));
         }
-         else{
+        else{
           if((prev%90 == 0  || prev%270 == 0) && prev%180 != 0){
             stack.add(0);
           }
@@ -320,21 +320,25 @@ String evaluate(List<String> expression, String inputType){
           stack.add(tan(prev));
         }
         else{
-          if((prev%90 == 0 || prev%270 == 0) && prev%180!=0){
+          if((prev%90 == 0  || prev%270 == 0) && prev%180 != 0){
             return "Error";
           }
           else if(prev%180 == 0){
             stack.add(0);
           }
+
+
           else{
             prev*=pi/180;
             if(sin(prev) == cos(prev)){
               stack.add(1);
             }
+            else if(sin(prev) * cos(prev) == -1){
+              stack.add(-1);
+            }
             else{
               stack.add(sin(prev)/cos(prev));
             }
-            
           }
         }
       }
