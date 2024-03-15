@@ -40,10 +40,19 @@ class ScreenState extends StateNotifier<List<String>>{
     
 
     if (B.type == ButtonClass.valuenentry){
+      bool tenExpo = false;
+      bool eExpo = false;
+      if(B.letter == "10^"){
+        tenExpo = true;
+      }
+      if(B.letter == "eˣ"){
+        eExpo = true;
+      }
       if(
         state.isNotEmpty 
         && (state[state.length - 1].contains(RegExp(r'[0-9]')) || state[state.length-1].contains("π") || state[state.length-1].contains("e")) 
-        && ("12345678900.%arcsincarcosarctanlogln√πe".contains(B.letter))){
+        && ("102345678900.%arcsincarcosarctanlogln√πe".contains(B.letter) || tenExpo || eExpo)
+        ){
             String fin = state.removeLast();
             if(
               (fin.contains("%") && !B.letter.contains("%")) || "arcsinarccosarctanlogln√".contains(B.letter) 
@@ -52,7 +61,16 @@ class ScreenState extends StateNotifier<List<String>>{
                 state = [...state, fin, "×", B.letter];
             }
             else{
-              state = [...state, fin + B.letter];
+                if(tenExpo){
+                  state = [...state, "${fin}10", "^"];
+                }
+                else if(eExpo){
+                  state = [...state, "${fin}e", "^"];
+                }
+                else{
+                  state = [...state, fin + B.letter];
+                }
+                
             }
             if("arcsinarccosarctanlogln√".contains(B.letter)){
               state = [...state, "("];
@@ -68,10 +86,18 @@ class ScreenState extends StateNotifier<List<String>>{
         }
       }
       else{
-        state = [...state, B.letter];
-        if("arcsinarccosarctanlogln√".contains(B.letter)){
-              state = [...state, "("];
-            }
+        if(tenExpo){
+          state = [...state, "10", "^"];
+        }
+        else if(eExpo){
+          state = [...state, "e", "^"];
+        }
+        else{
+          state = [...state, B.letter];
+          if("arcsinarccosarctanlogln√".contains(B.letter)){
+            state = [...state, "("];
+          }
+        }
       }
     }
     else if(B.type == ButtonClass.alldeletion){
@@ -94,7 +120,6 @@ class ScreenState extends StateNotifier<List<String>>{
       if(evaluation != "Error"){
         state = [evaluation];
       }
-      
     }
   }
 }

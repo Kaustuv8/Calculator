@@ -74,7 +74,7 @@ List<String> givePostFix(List<String> expression){
     }
     //Manges placement of multiplication symbol 
     if( 
-      i!=0 && i<expression.length-1 && ((expression[i-1] == ')' && !isOperator(expression[i]) && expression[i] != ")")||
+      i!=0 && i<expression.length && ((expression[i-1] == ')' && !isOperator(expression[i]) && expression[i] != ")")||
       (
         !isOperator(expression[i-1])
         && !"arcsinarccosarctanlogln√".contains(expression[i-1]) 
@@ -310,24 +310,39 @@ String evaluate(List<String> expression, String inputType){
           }
           else{
             prev*=pi/180;
-            stack.add(sin(prev));
+            stack.add(cos(prev));
           }
         } 
       }
       if(i == "tan"){
         double prev = stack.removeLast();
         if(inputType == "rad"){
-          stack.add(tan(prev));
+          if(prev%(pi/2) == 0 && !(prev%pi == 0)){
+            return "Error";
+          }
+          else if(prev%pi == 0){
+            stack.add(0);
+          }
+          else{
+            if(sin(prev) == cos(prev)){
+              stack.add(1);
+            }
+            else if(sin(prev) * cos(prev) == -1){
+              stack.add(-1);
+            }
+            else{
+              stack.add(sin(prev)/cos(prev));
+            }
+          }
         }
         else{
-          if((prev%90 == 0  || prev%270 == 0) && prev%180 != 0){
+          if(prev%90 == 0 && !(prev%180 == 0)){
             return "Error";
           }
           else if(prev%180 == 0){
             stack.add(0);
           }
-
-
+        
           else{
             prev*=pi/180;
             if(sin(prev) == cos(prev)){
@@ -339,7 +354,7 @@ String evaluate(List<String> expression, String inputType){
             else{
               stack.add(sin(prev)/cos(prev));
             }
-          }
+          } 
         }
       }
       if(i == "log"){
