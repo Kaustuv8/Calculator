@@ -52,6 +52,16 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
     return buttonList2;
   }
 
+  Color giveButtonColour(Button B){
+    if(B.type == ButtonClass.evaluation){
+      return Colors.blueAccent;
+    }
+    if("12345678900.".contains(B.letter) && B.type == ButtonClass.valuenentry){
+      return const Color.fromARGB(255, 62, 61, 61);
+    }
+    return const Color.fromARGB(255, 37, 36, 36); 
+  }
+
   Color giveLetterColour(Button B){
     if(B.type == ButtonClass.valuemod){
       if(inputType == "rad"){
@@ -71,6 +81,7 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
       }
     }
   }
+  
   return Colors.white;
 }
 
@@ -143,24 +154,27 @@ class _CalculatorMenuState extends ConsumerState<CalculatorMenu> {
                       ref.read(errorTextProvider.notifier).removeError();
                       ref.read(textColorProvider.notifier).turnWhite();
                       if(i.type == ButtonClass.evaluation){
-                        conclude(
-                          ref.read(screenStateProvider), 
-                          evaluate(
-                            ref.read(screenStateProvider), 
-                            ref.read(radDegSelectorProvider),
-                          ),
-                        );
-                        print(save); 
-                        if(!ref.read(screenStateProvider.notifier).errorNotPresent(inputType)){
+                        String answer = evaluate(ref.read(screenStateProvider), ref.read(radDegSelectorProvider));
+                        
+                        if(answer=="Error"){
                           ref.read(errorTextProvider.notifier).giveError();
                           ref.read(textColorProvider.notifier).turnRed();
+                        }
+                        else{
+                          ref.read(textColorProvider.notifier).turnWhite();
+                          ref.read(errorTextProvider.notifier).giveAnswer(answer);
+                          conclude(
+                          ref.read(screenStateProvider), 
+                          answer,
+                        );
+                          print(save); 
                         }
                       }
                       ref.read(screenStateProvider.notifier).buttonReact(i, ref.read(radDegSelectorProvider));
                     },
                     child: CircleAvatar(
                       radius: 5,
-                      backgroundColor: const Color.fromARGB(255, 54, 54, 54),
+                      backgroundColor: giveButtonColour(i),
                       child: Text(
                         i.letter,
                         style: TextStyle(

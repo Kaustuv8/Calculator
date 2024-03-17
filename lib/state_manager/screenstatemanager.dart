@@ -48,7 +48,10 @@ class ScreenState extends StateNotifier<List<String>>{
       if(B.letter == "eˣ"){
         eExpo = true;
       }
-      if(
+      if(B.letter == "x²"){
+        state = [...state, "^", "2"];
+      }
+      else if(
         state.isNotEmpty 
         && (state[state.length - 1].contains(RegExp(r'[0-9]')) || state[state.length-1].contains("π") || state[state.length-1].contains("e")) 
         && ("102345678900.%arcsincarcosarctanlogln√πe".contains(B.letter) || tenExpo || eExpo)
@@ -115,12 +118,12 @@ class ScreenState extends StateNotifier<List<String>>{
         }
       }
     }
-    else if(B.type == ButtonClass.evaluation){
-      String evaluation = evaluate(state, inputType);
-      if(evaluation != "Error"){
-        state = [evaluation];
-      }
-    }
+   // else if(B.type == ButtonClass.evaluation){
+   //   String evaluation = evaluate(state, inputType);
+   //   if(evaluation != "Error"){
+   //     state = [evaluation];
+   //   }
+   // }
   }
 }
 

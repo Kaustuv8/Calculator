@@ -8,8 +8,13 @@ class errorText extends StateNotifier<String>{
     state = "Error";
   }
 
+
   void removeError(){
     state = "";
+  }
+
+  void giveAnswer(String ans){
+    state = ans;
   }
 }
 

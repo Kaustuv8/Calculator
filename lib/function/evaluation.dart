@@ -95,6 +95,9 @@ List<String> givePostFix(List<String> expression){
     }
   }
   //Actual Postfix generation begins from here
+  if(expression.last == "("){
+    return [];
+  }
   for(final i  in expression){
     if(isOperator(i)){
       if(stack.isEmpty || 

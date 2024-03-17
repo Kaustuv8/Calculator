@@ -42,7 +42,7 @@ class DisplayScreen extends ConsumerWidget {
             errorText,
             textAlign: TextAlign.right,
             style: TextStyle(
-              fontSize: 27,
+              fontSize: 32,
               color: textColor,
             ),
           ),
