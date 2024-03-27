@@ -25,7 +25,11 @@ class ScreenState extends StateNotifier<List<String>>{
   ScreenState() : super([]);
 
   
-  
+  void loadState(List<String> Info){
+    int i = Info.indexOf("=");
+    state = Info.sublist(0,i);
+    
+  }
 
   bool errorNotPresent(String inputType){
     if(evaluate(state, inputType) == "Error"){
@@ -35,9 +39,6 @@ class ScreenState extends StateNotifier<List<String>>{
   }
 
   void buttonReact(Button B, String inputType){
-
-
-    
 
     if (B.type == ButtonClass.valuenentry){
       bool tenExpo = false;

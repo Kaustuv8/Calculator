@@ -95,7 +95,7 @@ List<String> givePostFix(List<String> expression){
     }
   }
   //Actual Postfix generation begins from here
-  if(expression.last == "("){
+  if(expression.isNotEmpty && expression.last == "("){
     return [];
   }
   for(final i  in expression){
@@ -144,6 +144,9 @@ List<String> givePostFix(List<String> expression){
 }
 
 String evaluate(List<String> expression, String inputType){
+  if(expression.isEmpty){
+    return "";
+  }
   print("Expression before evaluation : $expression");
   if(expression.isNotEmpty && "÷+-×arcsinarccosarctanlogln√".contains(expression[expression.length-1])){
     return "Error";
@@ -420,15 +423,20 @@ String evaluate(List<String> expression, String inputType){
   final String answer = stack.removeLast().toString().trim();
   if(double.parse(answer) == 0){
       return "0";
-    }
-  if(double.parse(answer).floor() == double.parse(answer)){
-    for(int pos = 0;;pos++){
-      if(answer[pos] == "."){
-        return answer.substring(0,pos);
+  }
+  try{
+    if(double.parse(answer).floor() == double.parse(answer)){
+      for(int pos = 0;;pos++){
+        if(answer[pos] == "."){
+          return answer.substring(0,pos);
+        }
       }
     }
+    else{
+      return answer;
+    }
   }
-  else{
+  on UnsupportedError{
     return answer;
   }
 }

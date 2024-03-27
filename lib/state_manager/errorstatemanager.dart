@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class errorText extends StateNotifier<String>{
   errorText(): super("");
   
+
   void giveError(){
     state = "Error";
   }
